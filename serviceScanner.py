@@ -11,13 +11,8 @@ def Running_processes():
         # print(process)
 
 def List_services():
-    resume = 0
     accessSCM = win32con.GENERIC_READ
-
-    #Open Service Control Manager
     hscm = win32service.OpenSCManager(None, None, accessSCM)
-
-    #Enumerate Service Control Manager DB
     typeFilter = win32service.SERVICE_WIN32
     stateFilter = win32service.SERVICE_STATE_ALL
     statuses = win32service.EnumServicesStatus(hscm, typeFilter, stateFilter)
