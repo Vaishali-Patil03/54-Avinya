@@ -1,38 +1,45 @@
 import wmi
-import os
-import win32con
-import win32service
 
 def Running_processes():
     f = wmi.WMI()
     print("pid        Process name")
     for process in f.Win32_Process():
         print(f"{process.ProcessId:<10} {process.Name}")
-        # print(process)
 
 def List_services():
-    accessSCM = win32con.GENERIC_READ
-    hscm = win32service.OpenSCManager(None, None, accessSCM)
-    typeFilter = win32service.SERVICE_WIN32
-    stateFilter = win32service.SERVICE_STATE_ALL
-    statuses = win32service.EnumServicesStatus(hscm, typeFilter, stateFilter)
+    f = wmi.WMI()
+    print("pid        Service name                                            Status")
+    for service in f.Win32_Service():
+        print(f"{service.ProcessId:<10}    {service.Caption:<10}              {service.State:} ")
 
-    for (short_name, desc, status) in statuses:
-        print(f"{short_name}                        {desc}") 
-
-
-def terminate_processes():
+def terminate_processes(name):
     ti = 0
-    name = 'Process_Name'
     f = wmi.WMI()
     for process in f.Win32_Process():
-        if process.name == name:
-            process.Terminate()
-            ti += 1
+        if not ti:
+            if process.name == name:
+                process.Terminate()
+                print("process terminated")
+                ti += 1
     if ti == 0:
-        print("Process not found!!!")
+        print("Process not found")
+    
+def terminate_services(service_name):
+    pass
 
 if __name__ == "__main__":
-    List_services();     #for listing services
-    Running_processes();  #for showing running processes
-    terminate_processes()   #for terminating processes
+    while True:
+        print("1. Show all running Processes \n2. Show all running services \n3. Stop Specific Process \n4. Quit")
+        option = int(input("Write Option number : "))
+        if option == 1:
+            Running_processes() 
+        elif option == 2:
+            List_services()    
+        elif option == 3:
+            process_name = input("write process name to stop process : ")
+            terminate_processes(process_name)
+        elif option == 4:
+            break
+        iteration = input("do you want to continue (y/n) : ")
+        if(iteration == "n"):
+            break
