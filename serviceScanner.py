@@ -2,17 +2,23 @@ import wmi
 
 def Running_processes():
     f = wmi.WMI()
-    print("pid        Process name")
+    result = []
+    # print("pid        Process name")
     for process in f.Win32_Process():
-        print(f"{process.ProcessId:<10} {process.Name}")
+        # print(f"{process.ProcessId:<10} {process.Name}")
+        result.append(f"{process.ProcessId}_{process.Name}")
+    return result
+
 
 
 def List_services():
     f = wmi.WMI()
-    print("pid        Service name                                            Status")
+    result = []
+    # print("pid        Service name                                            Status")
     for service in f.Win32_Service():
-        print(
-            f"{service.ProcessId:<10}    {service.Caption:<10}              {service.State:} ")
+        result.append(f"{service.ProcessId}_{service.Caption}_service.State")
+        # print(f"{service.ProcessId:<10}    {service.Caption:<10}              {service.State:} ")
+    return result
 
 
 def terminate_processes(name):
@@ -22,10 +28,10 @@ def terminate_processes(name):
         if not ti:
             if process.name == name:
                 process.Terminate()
-                print("process terminated")
+                # print("process terminated")
                 ti += 1
-    if ti == 0:
-        print("Process not found")
+    # if ti == 0:
+        # print("Process not found")
 
 if __name__ == "__main__":
     while True:
@@ -43,3 +49,5 @@ if __name__ == "__main__":
         iteration = input("do you want to continue (y/n) : ")
         if (iteration == "n"):
             break
+        # service_name = input("write process name to stop process")
+        # terminate_services(service_name)   #for terminating processes
